@@ -2,28 +2,34 @@
 
 {% block content %}
 <h2>Books</h2>
-    <table class="table table-bordered">
-        <thead>
+<div class="row">
+    <div class="col-sm offset-sm-10">
+        <a class="btn btn-primary" href="/book/create">Create</a>
+    </div>
+</div>
+<table class="table table-bordered">
+    <thead>
         <tr>
             <th>Book Name</th>
             <th>Book Description</th>
-            <th>Author Name</th>
-            <th>Author Patronymic</th>
+            <th>Author</th>
+            <th></th>
         </tr>
-        </thead>
-        <tbody>
+    </thead>
+    <tbody>
         {% for book in books %}
-            <tr>
-                <td>{{ book.name }}</td>
-                <td>{{ book.description }}</td>
-                {% for authors in book.authors.all %}
-                    <td>{{ authors.name }}</td>
-                    <td>{{ authors.patronymic }}</td>
-                <td><a class="btn btn-outline-success" href="{% url "new_order" book.id %}">Order</a></td>
-                {% endfor %}
-            </tr>
+        <tr>
+            <td><a href="/book/update?id={{book.id}}">{{ book.name}}</a></td>
+            <td>{{ book.description }}</td>
+            {% for authors in book.authors.all %}
+            <td>{{ authors.name }} {{ authors.patronymic }} {{ authors.surname }}</td>
+            {% endfor %}
+            <td><a class="btn btn-outline-success" href="{% url "new_order" book.id %}">Order</a> <a
+                    class="btn btn-outline-danger" href="/book/delete?id={{book.id}}">Remove</a></td>
+
+        </tr>
 
         {% endfor %}
-        </tbody>
-    </table>
+    </tbody>
+</table>
 {% endblock %}

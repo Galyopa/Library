@@ -41,8 +41,12 @@ class BooksViewAll(ListView):
 def create_book(request, template_name='create.html'):
     form = CreateForm(request.POST or None)
     if form.is_valid():
-        form.save()
-        return redirect('')
+        name = request.POST.get("name")
+        description = request.POST.get("description")
+        count = request.POST.get("count")
+        author = Author.get_by_id(request.POST.get("author_id"))
+        Book.create(name, description, count,authors = [author])
+        return redirect('/book')
     authors = Author.get_all()
     return render(request, template_name, {'form':form, 'authors':authors})
 
@@ -52,7 +56,7 @@ def update_book(request):
     if request.method == 'GET':
         id = request.GET["id"]
         book = Book.get_by_id(id)
-        return render(request, 'book/update.html', {'book': book})
+        return render(request, 'update.html', {'book': book})
 
     if request.method == 'POST':
         id = request.POST.get("id")
@@ -61,10 +65,10 @@ def update_book(request):
         book.description = request.POST.get("description")
         book.count = request.POST.get("count")
         book.save()
-        return redirect('/book/list')
+        return redirect('/book')
 
     
 def delete_book(request):
     id = request.GET["id"]
     Book.delete_by_id(id)
-    return redirect('/book/list')
+    return redirect('/book')

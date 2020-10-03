@@ -1,6 +1,7 @@
 from django.http import Http404
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView
+from .forms import CreateForm
 
 from author.models import Author
 from book.models import Book
@@ -36,3 +37,34 @@ class BooksViewAll(ListView):
     context_object_name = 'books'
     paginate_by = 10
     queryset = Book.objects.all()
+
+def create_book(request, template_name='create.html'):
+    form = CreateForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('')
+    authors = Author.get_all()
+    return render(request, template_name, {'form':form, 'authors':authors})
+
+
+def update_book(request):
+    
+    if request.method == 'GET':
+        id = request.GET["id"]
+        book = Book.get_by_id(id)
+        return render(request, 'book/update.html', {'book': book})
+
+    if request.method == 'POST':
+        id = request.POST.get("id")
+        book = Book.get_by_id(id)
+        book.name = request.POST.get("name")
+        book.description = request.POST.get("description")
+        book.count = request.POST.get("count")
+        book.save()
+        return redirect('/book/list')
+
+    
+def delete_book(request):
+    id = request.GET["id"]
+    Book.delete_by_id(id)
+    return redirect('/book/list')

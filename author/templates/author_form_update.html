@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1> Create Author </h1>
+<h1> Update Author </h1>
 {% if user.is_authenticated %}
-<form method="post" action="{% url 'create_author'  %}">
+<form method="post" action="{% url 'update_author' author.pk %}">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Save">

@@ -1,17 +1,24 @@
+from abc import ABC
+
 from django.http import Http404
 from django.shortcuts import redirect
 from django.contrib import messages
-from django.views.generic import ListView
+from django.urls import reverse
+from django.views.generic import ListView, CreateView
 
 from authentication.models import CustomUser
+from author.forms import AuthorForm
 from author.models import Author
 
 
-class AuthorViewById(ListView):
-    model = Author
+class AbstractAuthorView(ABC):
+    odel = Author
     template_name = 'author.html'
     context_object_name = 'authors'
     paginate_by = 10
+
+
+class AuthorViewById(AbstractAuthorView, ListView):
 
     def get_queryset(self):
         try:
@@ -20,12 +27,24 @@ class AuthorViewById(ListView):
             raise Http404("No Books matches the given query.")
 
 
-class AuthorViewAll(ListView):
-    model = Author
-    template_name = 'author.html'
-    context_object_name = 'authors'
-    paginate_by = 10
+class AuthorViewAll(AbstractAuthorView, ListView):
     queryset = Author.objects.all()
+
+
+class AuthorCreateView(CreateView):
+    page_title = "Create Author"
+    model = Author
+    form_class = AuthorForm
+    # permission_required = "add_author"
+
+    template_name = 'author_form.html'
+    success_url = '/author'
+    # def get_success_url(self):
+    #     return reverse("authors:author_by_id_url", args=(self.object.pk,))
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
 
 
 def delete_author(request, id):

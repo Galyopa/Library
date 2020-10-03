@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Author</h2>
+<h2>Authors</h2>
 <table class="table table-bordered">
     <thead>
     <tr>
@@ -17,8 +17,9 @@
         <td>{{ author.surname}}</td>
         <td>{{ author.patronymic }}</td>
         {% if user.is_authenticated %}
+
         <td>
-        <a class="btn btn-outline-danger"  href="{% url "delete_author" author.id %}">Delete</a>
+            <a class="btn btn-outline-danger" href="{% url "delete_author" author.id %}">Delete</a>
         </td>
         {% endif %}
     </tr>

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Author form</h2>
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'create' %}">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Save">
+    </form>
+    {% endif %}
+{% endblock content %}

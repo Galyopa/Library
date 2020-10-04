@@ -1,4 +1,5 @@
 from abc import ABC
+
 from django.http import Http404
 from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView

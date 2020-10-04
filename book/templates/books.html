@@ -2,11 +2,13 @@
 
 {% block content %}
 <h2>Books</h2>
+{% if user.is_authenticated and user.role == 1 %}
 <div class="row">
     <div class="col-sm offset-sm-10">
         <a class="btn btn-primary" href="/book/create">Create</a>
     </div>
 </div>
+{% endif %}
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -19,14 +21,22 @@
     <tbody>
         {% for book in books %}
         <tr>
-            <td><a href="/book/update?id={{book.id}}">{{ book.name}}</a></td>
+            <td>
+                {% if user.is_authenticated and user.role == 1 %}
+                <a href="/book/update?id={{book.id}}">{{ book.name}}</a>
+                {% else %}
+                {{ book.name}}
+                {% endif %}
+            </td>
             <td>{{ book.description }}</td>
             {% for authors in book.authors.all %}
             <td>{{ authors.name }} {{ authors.patronymic }} {{ authors.surname }}</td>
             {% endfor %}
-            <td><a class="btn btn-outline-success" href="{% url "new_order" book.id %}">Order</a> <a
-                    class="btn btn-outline-danger" href="/book/delete?id={{book.id}}">Remove</a></td>
-
+            <td><a class="btn btn-outline-success" href="{% url "new_order" book.id %}">Order</a>
+                {% if user.is_authenticated and user.role == 1 %}
+                <a class="btn btn-outline-danger" href="/book/delete?id={{book.id}}">Remove</a>
+                {% endif %}
+            </td>
         </tr>
 
         {% endfor %}

@@ -1,10 +1,13 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView
+from rest_framework import generics
+
 from .forms import CreateForm
 
 from author.models import Author
 from book.models import Book
+from .serializer import BookSerializer
 
 
 class BooksListViewByAuthor(ListView):
@@ -38,6 +41,7 @@ class BooksViewAll(ListView):
     paginate_by = 10
     queryset = Book.objects.all()
 
+
 def create_book(request, template_name='create.html'):
     form = CreateForm(request.POST or None)
     if form.is_valid():
@@ -45,14 +49,13 @@ def create_book(request, template_name='create.html'):
         description = request.POST.get("description")
         count = request.POST.get("count")
         author = Author.get_by_id(request.POST.get("author_id"))
-        Book.create(name, description, count,authors = [author])
+        Book.create(name, description, count, authors=[author])
         return redirect('/book')
     authors = Author.get_all()
-    return render(request, template_name, {'form':form, 'authors':authors})
+    return render(request, template_name, {'form': form, 'authors': authors})
 
 
 def update_book(request):
-    
     if request.method == 'GET':
         id = request.GET["id"]
         book = Book.get_by_id(id)
@@ -67,8 +70,22 @@ def update_book(request):
         book.save()
         return redirect('/book')
 
-    
+
 def delete_book(request):
     id = request.GET["id"]
     Book.delete_by_id(id)
     return redirect('/book')
+
+
+class BookCreateRestView(generics.CreateAPIView):
+    serializer_class = BookSerializer
+
+
+class BookListRestView(generics.ListAPIView):
+    serializer_class = BookSerializer
+    queryset = Book.objects.all()
+
+
+class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = BookSerializer
+    queryset = Book.objects.all()

@@ -69,12 +69,10 @@ class AuthorCreateRestView(generics.CreateAPIView):
 
 
 class AuthorListRestView(generics.ListAPIView):
-    model = Author
     serializer_class = AuthorSerializer
     queryset = Author.objects.all()
 
 
 class AuthorDetailRestView(generics.RetrieveUpdateDestroyAPIView):
-    model = Author
     serializer_class = AuthorSerializer
     queryset = Author.objects.all()

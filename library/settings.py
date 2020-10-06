@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'authentication',
     'author',
     'book',
-    'order'
+    'order',
+    'rest_framework'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

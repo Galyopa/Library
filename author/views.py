@@ -3,11 +3,9 @@ from abc import ABC
 from django.http import Http404
 from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from rest_framework import generics
 
 from author.forms import AuthorForm
 from author.models import Author
-from author.serializer import AuthorSerializer
 
 
 class AbstractAuthorView(ABC):
@@ -62,17 +60,3 @@ class AuthorDeleteView(DeleteView):
     success_url = '/author'
     permission_required = "delete_author"
     template_name = 'author_confirm_delete.html'
-
-
-class AuthorCreateRestView(generics.CreateAPIView):
-    serializer_class = AuthorSerializer
-
-
-class AuthorListRestView(generics.ListAPIView):
-    serializer_class = AuthorSerializer
-    queryset = Author.objects.all()
-
-
-class AuthorDetailRestView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = AuthorSerializer
-    queryset = Author.objects.all()

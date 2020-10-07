@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import AuthorCreateRestView, AuthorListRestView, AuthorDetailRestView
+from .views_rest import AuthorCreateRestView, AuthorListRestView, AuthorDetailRestView
 
 urlpatterns = [
     path('', AuthorListRestView.as_view(), name='all_author_rest'),

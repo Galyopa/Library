@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import BookCreateRestView, BookListRestView, BookDetailView
+from .views_rest import BookCreateRestView, BookListRestView, BookDetailView
 
 urlpatterns = [
     path('', BookListRestView.as_view(), name='all_books_rest'),

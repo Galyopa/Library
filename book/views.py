@@ -1,13 +1,13 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView
-from rest_framework import generics
+
 
 from .forms import CreateForm
 
 from author.models import Author
 from book.models import Book
-from .serializer import BookSerializer
+
 
 
 class BooksListViewByAuthor(ListView):
@@ -77,15 +77,3 @@ def delete_book(request):
     return redirect('/book')
 
 
-class BookCreateRestView(generics.CreateAPIView):
-    serializer_class = BookSerializer
-
-
-class BookListRestView(generics.ListAPIView):
-    serializer_class = BookSerializer
-    queryset = Book.objects.all()
-
-
-class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = BookSerializer
-    queryset = Book.objects.all()

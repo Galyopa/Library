@@ -2,11 +2,20 @@
 
 {% block content %}
 <h1> Create Author </h1>
-{% if user.is_authenticated %}
 <form method="post" action="{% url 'create_author'  %}">
     {% csrf_token %}
-    {{ form }}
+    {% for field in form %}
+            <div class="form-group">
+                {% if field.errors %}
+                    <div class="alert alert-danger">
+                        {{ field.errors }}
+                    </div>
+                {% endif %}
+                {{ field.label }}
+                {{ field }}
+            </div>
+        {% endfor %}
     <input type="submit" value="Save">
 </form>
-{% endif %}
+
 {% endblock content %}

@@ -1,13 +1,11 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 
-
-from .forms import CreateForm
+from .forms import BookForm
 
 from author.models import Author
 from book.models import Book
-
 
 
 class BooksListViewByAuthor(ListView):
@@ -42,24 +40,23 @@ class BooksViewAll(ListView):
     queryset = Book.objects.all()
 
 
-def create_book(request, template_name='create.html'):
-    form = CreateForm(request.POST or None)
-    if form.is_valid():
-        name = request.POST.get("name")
-        description = request.POST.get("description")
-        count = request.POST.get("count")
-        author = Author.get_by_id(request.POST.get("author_id"))
-        Book.create(name, description, count, authors=[author])
-        return redirect('/book')
-    authors = Author.get_all()
-    return render(request, template_name, {'form': form, 'authors': authors})
+class BookCreateView(CreateView):
+    model = Book
+    form_class = BookForm
+    permission_required = "add_book"
+    template_name = 'create_book.html'
+    success_url = '/book'
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
 
 
 def update_book(request):
     if request.method == 'GET':
         id = request.GET["id"]
         book = Book.get_by_id(id)
-        return render(request, 'update.html', {'book': book})
+        return render(request, 'update_book.html', {'book': book})
 
     if request.method == 'POST':
         id = request.POST.get("id")
@@ -75,5 +72,3 @@ def delete_book(request):
     id = request.GET["id"]
     Book.delete_by_id(id)
     return redirect('/book')
-
-

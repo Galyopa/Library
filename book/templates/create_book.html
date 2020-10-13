@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1> Update Author </h1>
-{% if user.is_authenticated %}
-<form method="post" action="{% url 'update_author' author.pk %}">
-    {% csrf_token %}
-    {% for field in form %}
+    <h1>Book create</h1>
+
+    <form action="{% url 'book_create' %}" method="post">
+        {% csrf_token %}
+
+        {% for field in form %}
             <div class="form-group">
                 {% if field.errors %}
                     <div class="alert alert-danger">
@@ -16,7 +17,8 @@
                 {{ field }}
             </div>
         {% endfor %}
-    <input type="submit" value="Save">
-</form>
-{% endif %}
-{% endblock content %}
+        <button type="submit" class="btn btn-light">
+            Add book
+        </button>
+    </form>
+{% endblock %}
